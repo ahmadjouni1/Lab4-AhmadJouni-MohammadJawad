@@ -601,3 +601,5 @@ class SchoolWindow(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.critical(self, "Error", str(e))
 
 
+
+# TODO: Add Help > About dialog (PyQt)
