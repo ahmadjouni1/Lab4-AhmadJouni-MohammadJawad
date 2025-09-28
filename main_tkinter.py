@@ -10,7 +10,7 @@ and back up the database.
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-from db.sqlite_db import SchoolDB
+from data.db_sqlite import SchoolDBSqlite
 from models.student import Student
 from models.instructor import Instructor
 from models.course import Course
@@ -39,7 +39,7 @@ class SchoolGUI(tk.Tk):
         self.geometry("980x640")
 
         # ---- data access ---------------------------------------------------
-        self.db = SchoolDB(DB_PATH)
+        self.db = SchoolDBSqlite(DB_PATH)
 
         # ---- top bar (save/load/export/backup) -----------------------------
         bar = ttk.Frame(self, padding=8)
@@ -101,7 +101,7 @@ class SchoolGUI(tk.Tk):
             self.db.close()
         except Exception:
             pass
-        self.db = SchoolDB(DB_PATH)
+        self.db = SchoolDBSqlite(DB_PATH)
         self._refresh_picklists()
         self._refresh_table()
         messagebox.showinfo("Loaded", "Database connection re-opened.")

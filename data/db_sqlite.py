@@ -39,6 +39,31 @@ CREATE TABLE IF NOT EXISTS registrations (
 """
 
 class SchoolDBSqlite:
+    def view_rows(self):
+        """Yield tuples for the table view: (type, id, name, age, email, courses_or_instructor)"""
+        # Students
+        for s in self.students.values():
+            courses = ", ".join(c.course_id for c in getattr(s, 'registered_courses', []))
+            yield ("Student", s.student_id, s.name, s.age, getattr(s, '_email', getattr(s, 'email', '')), courses)
+        # Instructors
+        for i in self.instructors.values():
+            courses = ", ".join(c.course_id for c in getattr(i, 'assigned_courses', []))
+            yield ("Instructor", i.instructor_id, i.name, i.age, getattr(i, '_email', getattr(i, 'email', '')), courses)
+        # Courses
+        for c in self.courses.values():
+            instr = c.instructor.name if c.instructor else ""
+            yield ("Course", c.course_id, c.course_name, "", "", instr)
+    def get_students(self):
+        """Return a list of students as dicts."""
+        return [s.to_dict() for s in self.students.values()]
+
+    def get_instructors(self):
+        """Return a list of instructors as dicts."""
+        return [i.to_dict() for i in self.instructors.values()]
+
+    def get_courses(self):
+        """Return a list of courses as dicts."""
+        return [c.to_dict() for c in self.courses.values()]
     """
     SQLite-backed DB with an in-memory object cache to keep GUI code simple.
     Exposes the same attributes/methods the GUIs already use:
